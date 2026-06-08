@@ -7,6 +7,9 @@ import co.edu.udea.certificacion.reservasservicios.moduloIngreso.questions.LogIn
 import co.edu.udea.certificacion.reservasservicios.moduloIngreso.tasks.LogInEnterThe;
 import co.edu.udea.certificacion.reservasservicios.moduloIngreso.tasks.LogInOpenThe;
 import co.edu.udea.certificacion.reservasservicios.moduloIngreso.utils.SharedUserData;
+import co.edu.udea.certificacion.reservasservicios.moduloIngreso.questions.LogOutValidation;
+import co.edu.udea.certificacion.reservasservicios.moduloIngreso.tasks.LogOutEnterThe;
+import static org.hamcrest.Matchers.containsString;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -69,4 +72,19 @@ public class LogInStepDefinition {
         GivenWhenThen.then(user()).should(seeThat(LogInIncompleteValidation.successful(), equalTo("Completa este campo")));
     }
 
+    @Given("that I am on the home page")
+    public void thatIAmOnTheHomePage() {
+    }
+
+    @When("I close my session")
+    public void iCloseMySession() {
+        user().attemptsTo(LogOutEnterThe.session());
+    }
+
+    @Then("I can see the login page after logout")
+    public void iCanSeeTheLoginPageAfterLogout() {
+        GivenWhenThen.then(user()).should(
+            seeThat(LogOutValidation.successful(), containsString("Bienvenido"))
+        );
+    }
 }

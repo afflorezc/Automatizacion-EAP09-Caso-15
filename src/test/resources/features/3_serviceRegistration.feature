@@ -14,3 +14,10 @@ Feature: as a user, I want to register a service with its basic information so I
     Given that I am on the service registration page
     When I enter the name of the service but leave the description empty
     Then I can see a message indicating that the description is required
+    
+  @requiresLoginProvider
+  Scenario: service registration and availability creation
+    Given that I am on the service registration page
+    When I enter the "Corte de Pelo" and the "Servicio de peluquería profesional" about the service
+    And I create an availability slot for the registered service
+    Then I can see a message indicating that the availability was successfully created
