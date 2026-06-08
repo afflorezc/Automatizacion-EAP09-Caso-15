@@ -30,7 +30,8 @@ public class RegistrationStepDefinition {
     }
 
     User userData = new User();
-    public int numero = ThreadLocalRandom.current().nextInt(1, 1000);
+    //public int numero = ThreadLocalRandom.current().nextInt(1, 1000);
+    public long numero = System.currentTimeMillis();
 
 
     @Given("that I am on the registration page")
