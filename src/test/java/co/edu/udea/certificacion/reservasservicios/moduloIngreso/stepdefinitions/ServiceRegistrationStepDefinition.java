@@ -5,6 +5,8 @@ import co.edu.udea.certificacion.reservasservicios.moduloIngreso.questions.Servi
 import co.edu.udea.certificacion.reservasservicios.moduloIngreso.questions.ServiceRegistrationValidation;
 import co.edu.udea.certificacion.reservasservicios.moduloIngreso.tasks.ServiceRegistrationEnterThe;
 import co.edu.udea.certificacion.reservasservicios.moduloIngreso.tasks.ServiceRegistrationOpenThe;
+import co.edu.udea.certificacion.reservasservicios.moduloIngreso.questions.AvailabilityCreationValidation;
+import co.edu.udea.certificacion.reservasservicios.moduloIngreso.tasks.CreateAvailabilityEnterThe;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,6 +14,7 @@ import net.serenitybdd.screenplay.Actor;
 import net.serenitybdd.screenplay.GivenWhenThen;
 import net.serenitybdd.screenplay.actors.OnStage;
 
+import co.edu.udea.certificacion.reservasservicios.moduloIngreso.utils.SharedUserData;
 import static net.serenitybdd.screenplay.GivenWhenThen.seeThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -29,10 +32,12 @@ public class ServiceRegistrationStepDefinition {
     }
 
     @When("I enter the {string} and the {string} about the service")
-    public void iEnterTheAndTheAboutTheService(String string1,String string2) {
-        service.setName(string1);
+    public void iEnterTheAndTheAboutTheService(String string1, String string2) {
+        int numero = new java.util.Random().nextInt(999) + 1;
+        service.setName(string1 + " " + numero);
         service.setDescription(string2);
         user().attemptsTo(ServiceRegistrationEnterThe.information(service));
+        SharedUserData.setRegisteredService(service);
     }
 
     @Then("I can see a message indicating that the service was successfully registered")
@@ -50,5 +55,18 @@ public class ServiceRegistrationStepDefinition {
     @Then("I can see a message indicating that the description is required")
     public void iCanSeeAMessageIndicatingThatTheDescriptionIsRequired() {
         GivenWhenThen.then(user()).should(seeThat(ServiceRegistrationIncompleteValidation.successful(), equalTo("Completa este campo")));
+    }
+
+    @When("I create an availability slot for the registered service")
+    public void iCreateAnAvailabilitySlotForTheRegisteredService() {
+        user().attemptsTo(CreateAvailabilityEnterThe.information());
+    }
+
+    @Then("I can see a message indicating that the availability was successfully created")
+    public void iCanSeeAMessageIndicatingThatTheAvailabilityWasSuccessfullyCreated() {
+        GivenWhenThen.then(user()).should(
+            seeThat(AvailabilityCreationValidation.successful(),
+                equalTo("Franja de disponibilidad creada correctamente."))
+        );
     }
 }
